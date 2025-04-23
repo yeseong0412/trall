@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { BarChart3 } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Home() {
@@ -60,16 +59,6 @@ export default function Home() {
           </Button>
         </Link>
       </div>
-
-      <Link href="/leaderboard" className="mt-8">
-        <Button
-          variant="outline"
-          className="gap-2 border-gray-600 text-gray-300 hover:bg-gray-800"
-        >
-          <BarChart3 className="w-4 h-4" />
-          순위표 보기
-        </Button>
-      </Link>
     </main>
   );
 }

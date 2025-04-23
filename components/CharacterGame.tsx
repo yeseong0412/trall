@@ -87,14 +87,7 @@ export function CharacterGame({ character }: CharacterGameProps) {
             </div>
           </div>
 
-          <div className="flex space-x-2">
-            <Link href="/leaderboard">
-              <Button variant="outline" size="sm" className="gap-2">
-                <BarChart3 className="w-4 h-4" />
-                순위표
-              </Button>
-            </Link>
-          </div>
+          <div className="flex space-x-3"> </div>
         </header>
 
         <div className="hidden md:flex h-full">
