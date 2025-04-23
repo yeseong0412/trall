@@ -26,6 +26,8 @@ export default function Home() {
                     src="https://cdn.gukjenews.com/news/photo/202504/3251416_3361998_523.png"
                   alt="트랄라레로 트랄랄라"
                   className="w-full h-full object-cover"
+                    width={500}
+                    height={500}
                 />
               </div>
               <span className="text-lg font-medium">트랄라레로 트랄랄라</span>
@@ -49,6 +51,8 @@ export default function Home() {
                     src="https://i1.sndcdn.com/artworks-qJ5IFyKat8H70Vkz-tYUbnQ-t1080x1080.jpg"
                   alt="퉁퉁퉁퉁 사후라"
                   className="w-full h-full object-cover"
+                    width={500}
+                    height={500}
                 />
               </div>
               <span className="text-lg font-medium">퉁퉁퉁퉁 사후라</span>
