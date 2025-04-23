@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { BarChart3 } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -21,8 +22,8 @@ export default function Home() {
           >
             <div className="flex flex-col items-center justify-center space-y-4">
               <div className="w-32 h-32 rounded-full overflow-hidden">
-                <img 
-                  src="https://cdn.gukjenews.com/news/photo/202504/3251416_3361998_523.png" 
+                <Image
+                    src="https://cdn.gukjenews.com/news/photo/202504/3251416_3361998_523.png"
                   alt="트랄라레로 트랄랄라"
                   className="w-full h-full object-cover"
                 />
@@ -44,8 +45,8 @@ export default function Home() {
           >
             <div className="flex flex-col items-center justify-center space-y-4">
               <div className="w-32 h-32 rounded-full overflow-hidden">
-                <img 
-                  src="https://i1.sndcdn.com/artworks-qJ5IFyKat8H70Vkz-tYUbnQ-t1080x1080.jpg" 
+                <Image
+                    src="https://i1.sndcdn.com/artworks-qJ5IFyKat8H70Vkz-tYUbnQ-t1080x1080.jpg"
                   alt="퉁퉁퉁퉁 사후라"
                   className="w-full h-full object-cover"
                 />

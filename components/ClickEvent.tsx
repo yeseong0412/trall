@@ -11,7 +11,7 @@ interface ClickEventProps {
 
 export function ClickEvent({ event, onAnimationComplete }: ClickEventProps) {
   const [isVisible, setIsVisible] = useState(true);
-  
+
   useEffect(() => {
     // Remove the event after animation completes
     const timer = setTimeout(() => {
@@ -20,12 +20,14 @@ export function ClickEvent({ event, onAnimationComplete }: ClickEventProps) {
         onAnimationComplete(event.id);
       }, 100); // Small additional delay to ensure smooth removal
     }, 1500); // Match this with CSS animation duration
-    
+
     return () => clearTimeout(timer);
   }, [event.id, onAnimationComplete]);
-  
+
+
+
   if (!isVisible) return null;
-  
+
   return (
     <div
       className={cn(

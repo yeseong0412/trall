@@ -8,6 +8,7 @@ import { useGameState } from '@/hooks/useGameState';
 import { Button } from './ui/button';
 import { ArrowLeft, BarChart3 } from 'lucide-react';
 import { AdSpace } from './AdSpace';
+import Image from 'next/image';
 
 interface CharacterGameProps {
   character: Character;
@@ -137,7 +138,7 @@ export function CharacterGame({ character }: CharacterGameProps) {
                   }}
                   onClick={handleCharacterClick}
               >
-                <img
+                <Image
                     src={style.image}
                     alt={style.name}
                     className="w-full h-full object-cover"
@@ -208,7 +209,7 @@ export function CharacterGame({ character }: CharacterGameProps) {
                 }}
                 onClick={handleCharacterClick}
             >
-              <img
+              <Image
                   src={style.image}
                   alt={style.name}
                   className="w-full h-full object-cover"
