@@ -142,6 +142,8 @@ export function CharacterGame({ character }: CharacterGameProps) {
                     src={style.image}
                     alt={style.name}
                     className="w-full h-full object-cover"
+                    width={500}  // 원하는 너비 값
+                    height={500} // 원하는 높이 값
                 />
               </div>
 
@@ -213,6 +215,10 @@ export function CharacterGame({ character }: CharacterGameProps) {
                   src={style.image}
                   alt={style.name}
                   className="w-full h-full object-cover"
+
+                  width={500}  // 이미지의 너비
+                  height={500} // 이미지의 높이
+
               />
             </div>
 
