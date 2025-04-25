@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, Trophy } from 'lucide-react';
 import { AdSpace } from '@/components/AdSpace';
 import { subscribeToClicks } from '@/lib/firebase';
+import Image from 'next/image';
 
 export default function Dashboard() {
   const [characterAClicks, setCharacterAClicks] = useState(0);
@@ -41,6 +42,10 @@ export default function Dashboard() {
     : characterBClicks > characterAClicks 
       ? '퉁퉁퉁퉁 사후라' 
       : '무승부';
+
+  const isAWinning = characterAClicks > characterBClicks;
+  const isBWinning = characterBClicks > characterAClicks;
+  const isTie = characterAClicks === characterBClicks;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-4 md:p-8">
@@ -77,11 +82,56 @@ export default function Dashboard() {
             ) : (
               <>
                 {winner !== '무승부' && (
-                  <div className="flex items-center justify-center mb-6 p-4 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-lg">
-                    <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
-                    <span className="text-xl font-bold">
-                      {winner}가 이기고 있어요!
-                    </span>
+                  <div className="flex flex-col items-center mb-6 p-4 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-lg">
+                    <div className="flex items-center justify-center mb-4">
+                      <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
+                      <span className="text-xl font-bold">
+                        {winner}가 이기고 있어요!
+                      </span>
+                    </div>
+                    <div className="w-32 h-32 rounded-full overflow-hidden">
+                      <Image
+                        src={isAWinning 
+                          ? "https://cdn.gukjenews.com/news/photo/202504/3251416_3361998_523.png"
+                          : "https://i1.sndcdn.com/artworks-qJ5IFyKat8H70Vkz-tYUbnQ-t1080x1080.jpg"}
+                        alt={isAWinning ? "트랄라레로 트랄랄라" : "퉁퉁퉁퉁 사후라"}
+                        className="w-full h-full object-cover"
+                        width={500}
+                        height={500}
+                        priority
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                {winner === '무승부' && (
+                  <div className="flex flex-col items-center mb-6 p-4 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-lg">
+                    <div className="flex items-center justify-center mb-4">
+                      <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
+                      <span className="text-xl font-bold text-yellow-400">무승부!</span>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="w-24 h-24 rounded-full overflow-hidden">
+                        <Image
+                          src="https://cdn.gukjenews.com/news/photo/202504/3251416_3361998_523.png"
+                          alt="트랄라레로 트랄랄라"
+                          className="w-full h-full object-cover"
+                          width={500}
+                          height={500}
+                          priority
+                        />
+                      </div>
+                      <div className="w-24 h-24 rounded-full overflow-hidden">
+                        <Image
+                          src="https://i1.sndcdn.com/artworks-qJ5IFyKat8H70Vkz-tYUbnQ-t1080x1080.jpg"
+                          alt="퉁퉁퉁퉁 사후라"
+                          className="w-full h-full object-cover"
+                          width={500}
+                          height={500}
+                          priority
+                        />
+                      </div>
+                    </div>
                   </div>
                 )}
                 

@@ -22,10 +22,12 @@ export function CharacterGame({ character }: CharacterGameProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const [totalClicks, setTotalClicks] = useState(0);
+  const [opponentClicks, setOpponentClicks] = useState(0);
+  const opponent = character === 'A' ? 'B' : 'A';
 
   useEffect(() => {
-    // Firebase 실시간 구독 설정
-    const unsubscribe = subscribeToClicks(character, (count) => {
+    // 현재 캐릭터의 클릭 수 구독
+    const unsubscribeCurrent = subscribeToClicks(character, (count) => {
       console.log('Firebase update received:', count);
       setTotalClicks(count);
       if (count !== gameState.clicks) {
@@ -33,14 +35,19 @@ export function CharacterGame({ character }: CharacterGameProps) {
       }
     });
 
-    // 컴포넌트 언마운트 시 타이머 정리
+    // 상대 캐릭터의 클릭 수 구독
+    const unsubscribeOpponent = subscribeToClicks(opponent, (count) => {
+      setOpponentClicks(count);
+    });
+
     return () => {
-      unsubscribe();
+      unsubscribeCurrent();
+      unsubscribeOpponent();
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
       }
     };
-  }, [character]);
+  }, [character, opponent]);
 
   const updateFirebase = () => {
     if (debounceTimer.current) {
@@ -101,7 +108,6 @@ export function CharacterGame({ character }: CharacterGameProps) {
       .catch(error => console.error('Firebase update before switch failed:', error));
   };
 
-  const opponent = character === 'A' ? 'B' : 'A';
   const opponentName = characterInfo[opponent].name;
 
   return (
@@ -198,6 +204,9 @@ export function CharacterGame({ character }: CharacterGameProps) {
               <div className="mt-8 text-center">
                 <h2 className="text-2xl font-bold mb-2">총 클릭 수</h2>
                 <div className="text-5xl font-bold mb-4">{gameState.clicks}</div>
+                <div className="text-lg text-gray-400">
+                  {opponent === 'A' ? '트랄라레로' : '퉁퉁퉁퉁'} 클릭 수: {opponentClicks}
+                </div>
 
                 {gameState.clicks > 0 && gameState.clicks % 5 === 0 && (
                     <div className="text-xl font-semibold animate-pulse my-4" style={{ color: style.glowColor }}>
@@ -272,6 +281,9 @@ export function CharacterGame({ character }: CharacterGameProps) {
             <div className="mt-8 text-center">
               <h2 className="text-2xl font-bold mb-2">총 클릭 수</h2>
               <div className="text-5xl font-bold mb-4">{gameState.clicks}</div>
+              <div className="text-lg text-gray-400">
+                {opponent === 'A' ? '트랄라레로' : '퉁퉁퉁퉁'} 클릭 수: {opponentClicks}
+              </div>
 
               {gameState.clicks > 0 && gameState.clicks % 5 === 0 && (
                   <div className="text-xl font-semibold animate-pulse my-4" style={{ color: style.glowColor }}>
