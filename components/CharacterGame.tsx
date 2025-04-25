@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Character } from '@/lib/types';
 import { ClickEvent } from './ClickEvent';
@@ -9,6 +9,7 @@ import { Button } from './ui/button';
 import { ArrowLeft, BarChart3 } from 'lucide-react';
 import { AdSpace } from './AdSpace';
 import Image from 'next/image';
+import { updateClickCount, subscribeToClicks } from '@/lib/firebase';
 
 interface CharacterGameProps {
   character: Character;
@@ -19,6 +20,40 @@ export function CharacterGame({ character }: CharacterGameProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { gameState, handleClick, removeEvent } = useGameState(character);
   const [isAnimating, setIsAnimating] = useState(false);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const [totalClicks, setTotalClicks] = useState(0);
+
+  useEffect(() => {
+    // Firebase 실시간 구독 설정
+    const unsubscribe = subscribeToClicks(character, (count) => {
+      console.log('Firebase update received:', count);
+      setTotalClicks(count);
+      if (count !== gameState.clicks) {
+        handleClick(0, 0, count);
+      }
+    });
+
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      unsubscribe();
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [character]);
+
+  const updateFirebase = () => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    debounceTimer.current = setTimeout(() => {
+      const newClicks = gameState.clicks;
+      console.log('Updating Firebase with clicks:', newClicks);
+      updateClickCount(character, newClicks)
+        .then(() => console.log('Firebase update successful'))
+        .catch(error => console.error('Firebase update failed:', error));
+    }, 1000);
+  };
 
   const characterInfo = {
     A: {
@@ -52,6 +87,18 @@ export function CharacterGame({ character }: CharacterGameProps) {
     setTimeout(() => setIsAnimating(false), 300);
 
     handleClick(x, y);
+    updateFirebase();
+  };
+
+  const handleCharacterSwitch = () => {
+    // 다른 캐릭터로 전환하기 전에 현재 클릭 수를 Firebase에 저장
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    console.log('Saving clicks before switch:', gameState.clicks);
+    updateClickCount(character, gameState.clicks)
+      .then(() => console.log('Firebase update before switch successful'))
+      .catch(error => console.error('Firebase update before switch failed:', error));
   };
 
   const opponent = character === 'A' ? 'B' : 'A';
@@ -83,11 +130,18 @@ export function CharacterGame({ character }: CharacterGameProps) {
           </span>
 
             <div className="px-3 py-1 bg-gray-700/50 rounded-full">
-              {gameState.clicks} 클릭
+              {gameState.clicks} 클릭 (전체: {totalClicks})
             </div>
           </div>
 
-          <div className="flex space-x-3"> </div>
+          <div className="flex space-x-3">
+            <Link href="/dashboard">
+              <Button variant="outline" size="sm" className="gap-2">
+                <BarChart3 className="w-4 h-4" />
+                대시보드
+              </Button>
+            </Link>
+          </div>
         </header>
 
         <div className="hidden md:flex h-full">
@@ -123,7 +177,7 @@ export function CharacterGame({ character }: CharacterGameProps) {
                 w-48 h-48 md:w-64 md:h-64 rounded-full flex items-center justify-center
                 bg-gradient-to-br ${style.bgColor} shadow-2xl
                 cursor-pointer select-none overflow-hidden
-                transition-all duration-300
+                transition-all duration-300 mt-16
                 ${isAnimating ? 'scale-95' : 'scale-100 hover:scale-105'}
               `}
                   style={{
@@ -135,8 +189,9 @@ export function CharacterGame({ character }: CharacterGameProps) {
                     src={style.image}
                     alt={style.name}
                     className="w-full h-full object-cover"
-                    width={500}  // 원하는 너비 값
-                    height={500} // 원하는 높이 값
+                    width={500}
+                    height={500}
+                    priority
                 />
               </div>
 
@@ -152,7 +207,7 @@ export function CharacterGame({ character }: CharacterGameProps) {
               </div>
 
               <div className="mt-8">
-                <Link href={`/${opponent.toLowerCase()}`}>
+                <Link href={`/${opponent.toLowerCase()}`} onClick={handleCharacterSwitch}>
                   <Button variant="outline" className="border-gray-600">
                     {opponentName}으로 변경
                   </Button>
@@ -196,7 +251,7 @@ export function CharacterGame({ character }: CharacterGameProps) {
               w-40 h-40 rounded-full flex items-center justify-center
               bg-gradient-to-br ${style.bgColor} shadow-2xl
               cursor-pointer select-none overflow-hidden
-              transition-all duration-300
+              transition-all duration-300 mt-16
               ${isAnimating ? 'scale-95' : 'scale-100 hover:scale-105'}
             `}
                 style={{
@@ -208,10 +263,9 @@ export function CharacterGame({ character }: CharacterGameProps) {
                   src={style.image}
                   alt={style.name}
                   className="w-full h-full object-cover"
-
-                  width={500}  // 이미지의 너비
-                  height={500} // 이미지의 높이
-
+                  width={500}
+                  height={500}
+                  priority
               />
             </div>
 
@@ -227,7 +281,7 @@ export function CharacterGame({ character }: CharacterGameProps) {
             </div>
 
             <div className="mt-8">
-              <Link href={`/${opponent.toLowerCase()}`}>
+              <Link href={`/${opponent.toLowerCase()}`} onClick={handleCharacterSwitch}>
                 <Button variant="outline" className="border-gray-600">
                   {opponentName}으로 변경
                 </Button>

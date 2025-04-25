@@ -32,47 +32,46 @@ const getRandomColor = () => {
 };
 
 export function useGameState(character: Character) {
-  const [gameState, setGameState] = useState<GameState>({
-    clicks: 0,
-    events: []
-  });
-  
+  const [gameState, setGameState] = useState<GameState>({ clicks: 0, events: [] });
+
   useEffect(() => {
-    const storedClicks = localStorage.getItem(`character${character}Clicks`);
-    if (storedClicks) {
-      setGameState(prevState => ({
-        ...prevState,
-        clicks: parseInt(storedClicks, 10)
-      }));
+    // 클라이언트 사이드에서만 localStorage 접근
+    const saved = localStorage.getItem(`gameState-${character}`);
+    if (saved) {
+      setGameState(JSON.parse(saved));
     }
   }, [character]);
-  
+
   useEffect(() => {
-    localStorage.setItem(`character${character}Clicks`, gameState.clicks.toString());
-  }, [gameState.clicks, character]);
-  
-  const handleClick = (x: number, y: number) => {
-    const newClickCount = gameState.clicks + 1;
-    const isMilestone = newClickCount % 5 === 0;
+    // 클라이언트 사이드에서만 localStorage 업데이트
+    localStorage.setItem(`gameState-${character}`, JSON.stringify(gameState));
+  }, [gameState, character]);
+
+  const handleClick = (x: number, y: number, externalClicks?: number) => {
+    setGameState(prev => {
+      const newClicks = externalClicks !== undefined ? externalClicks : prev.clicks + 1;
+      const isMilestone = newClicks % 5 === 0;
+      
+      const newEvent: ClickEvent = {
+        id: Date.now().toString(),
+        text: isMilestone 
+          ? MILESTONE_MESSAGES[Math.min(Math.floor(newClicks / 5), MILESTONE_MESSAGES.length - 1)]
+          : CLICK_MESSAGES[Math.floor(Math.random() * CLICK_MESSAGES.length)],
+        x,
+        y,
+        color: getRandomColor(),
+        scale: isMilestone ? 1.5 : 1,
+        rotation: Math.random() * 20 - 10,
+        timestamp: Date.now(),
+      };
+      
+      return {
+        clicks: newClicks,
+        events: [...prev.events, newEvent].slice(-10)
+      };
+    });
     
-    const newEvent: ClickEvent = {
-      id: Math.random().toString(36).substring(2, 9),
-      text: isMilestone 
-        ? MILESTONE_MESSAGES[Math.min(Math.floor(newClickCount / 5), MILESTONE_MESSAGES.length - 1)]
-        : CLICK_MESSAGES[Math.floor(Math.random() * CLICK_MESSAGES.length)],
-      x,
-      y,
-      color: getRandomColor(),
-      scale: isMilestone ? 1.5 : 1,
-      rotation: Math.random() * 20 - 10,
-    };
-    
-    setGameState(prevState => ({
-      clicks: newClickCount,
-      events: [...prevState.events, newEvent].slice(-10)
-    }));
-    
-    if (isMilestone && typeof window !== 'undefined') {
+    if (gameState.clicks % 5 === 0) {
       document.documentElement.style.setProperty('--confetti-time', '5s');
       setTimeout(() => {
         document.documentElement.style.setProperty('--confetti-time', '0s');
@@ -81,9 +80,9 @@ export function useGameState(character: Character) {
   };
   
   const removeEvent = (eventId: string) => {
-    setGameState(prevState => ({
-      ...prevState,
-      events: prevState.events.filter(event => event.id !== eventId)
+    setGameState(prev => ({
+      ...prev,
+      events: prev.events.filter(event => event.id !== eventId)
     }));
   };
   
