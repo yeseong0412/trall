@@ -44,8 +44,6 @@ export default function Dashboard() {
       : '무승부';
 
   const isAWinning = characterAClicks > characterBClicks;
-  const isBWinning = characterBClicks > characterAClicks;
-  const isTie = characterAClicks === characterBClicks;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-4 md:p-8">
