@@ -85,14 +85,14 @@ export default function Home() {
                   <div className="w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden">
                     <Image
                       src="https://i1.sndcdn.com/artworks-qJ5IFyKat8H70Vkz-tYUbnQ-t1080x1080.jpg"
-                      alt="퉁퉁퉁퉁 사후라"
+                      alt="퉁퉁퉁퉁퉁 사후라"
                       className="w-full h-full object-cover"
                       width={500}
                       height={500}
                       priority
                     />
                   </div>
-                  <span className="text-sm md:text-lg font-medium">퉁퉁퉁퉁 사후라</span>
+                  <span className="text-sm md:text-lg font-medium">퉁퉁퉁퉁퉁 사후라</span>
                   <div className="text-2xl md:text-4xl font-bold text-red-300">{clicksB}</div>
                 </div>
               </Button>
@@ -100,7 +100,27 @@ export default function Home() {
           </div>
 
           <div className="text-center text-gray-400">
-            <p className="text-lg md:text-2xl">현재 점수: 트랄라레로 트랄랄라 {clicksA} - {clicksB} 퉁퉁퉁퉁 사후라</p>
+            <p className="text-lg md:text-2xl">현재 점수: 트랄라레로 트랄랄라 {clicksA} - {clicksB} 퉁퉁퉁퉁퉁 사후라</p>
+          </div>
+
+          <div className="flex flex-col items-center space-y-4">
+            <Link href="/a" className="w-full">
+              <Button className="w-full h-16 md:h-20 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300">
+                <span className="text-base md:text-xl">트랄라레로 트랄랄라 돕기</span>
+              </Button>
+            </Link>
+            
+            <Link href="/b" className="w-full">
+              <Button className="w-full h-16 md:h-20 bg-gradient-to-r from-red-600 to-red-400 hover:from-red-500 hover:to-red-300">
+                <span className="text-base md:text-xl">퉁퉁퉁퉁퉁 사후라 돕기</span>
+              </Button>
+            </Link>
+
+            <Link href="https://forms.gle/5hZowZjUGsy47tor5" target="_blank" className="w-full">
+              <Button className="w-full h-12 md:h-14 bg-gradient-to-r from-yellow-600 to-amber-400 hover:from-yellow-500 hover:to-amber-300">
+                <span className="text-sm md:text-base">광고 문의하기</span>
+              </Button>
+            </Link>
           </div>
         </div>
 

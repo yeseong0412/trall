@@ -77,8 +77,8 @@ export default function Dashboard() {
           
           <Card className="bg-gray-800/50 border-gray-700">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xl md:text-2xl">전투 결과</CardTitle>
-              <div className="px-3 py-1 rounded-full bg-gray-700/50 text-sm md:text-base">
+              <CardTitle className="text-xl md:text-2xl text-white">전투 결과</CardTitle>
+              <div className="px-3 py-1 rounded-full bg-gray-700/50 text-sm md:text-base text-white">
                 총 클릭: {totalClicks}
               </div>
             </CardHeader>
@@ -148,7 +148,7 @@ export default function Dashboard() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm md:text-base">
                         <span className="font-medium text-blue-400">트랄라레로 트랄랄라</span>
-                        <span>{characterAClicks} 클릭 ({Math.round(aPercentage)}%)</span>
+                        <span className="text-white">{characterAClicks} 클릭 ({Math.round(aPercentage)}%)</span>
                       </div>
                       <Progress value={aPercentage} className="h-2 bg-gray-700" 
                         indicatorClassName="bg-gradient-to-r from-blue-600 to-blue-400" />
@@ -157,7 +157,7 @@ export default function Dashboard() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm md:text-base">
                         <span className="font-medium text-red-400">퉁퉁퉁퉁 사후라</span>
-                        <span>{characterBClicks} 클릭 ({Math.round(bPercentage)}%)</span>
+                        <span className="text-white">{characterBClicks} 클릭 ({Math.round(bPercentage)}%)</span>
                       </div>
                       <Progress value={bPercentage} className="h-2 bg-gray-700"
                         indicatorClassName="bg-gradient-to-r from-red-600 to-red-400" />
